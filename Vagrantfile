@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
     master.vm.box = "ubuntu/bionic64"
     master.disksize.size = "25GB"
     master.vm.hostname = "master"
-    master.vm.network :private_network, ip: "10.0.0.10"
+    master.vm.network :private_network, ip: "10.0.0.10", virtualbox__intnet: "08net"
     master.vm.provision :shell, privileged: false, inline: $provision_master_node
   end
 
@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
       node.vm.box = "ubuntu/bionic64"
       node.disksize.size = "25GB"
       node.vm.hostname = name
-      node.vm.network :private_network, ip: "10.0.0.#{i + 11}"
+      node.vm.network :private_network, ip: "10.0.0.#{i + 11}", virtualbox__intnet: "08net"
       node.vm.provision :shell, privileged: false, inline: <<-SHELL
 sudo /vagrant/join.sh
 echo 'Environment="KUBELET_EXTRA_ARGS=--node-ip=10.0.0.#{i + 11}"' | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
